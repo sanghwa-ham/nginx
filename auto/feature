@@ -62,7 +62,22 @@ if [ -x $NGX_AUTOTEST ]; then
                 fi
 
             else
-                echo " found but is not working"
+                echo " found"
+                eval "adb push $NGX_AUTOTEST /data/local/tmp/ 2>&1" > /dev/null
+                adb shell chmod 755 /data/local/tmp/$(basename $NGX_AUTOTEST)
+                ngx_size=`adb shell /data/local/tmp/$(basename $NGX_AUTOTEST 2>&1)`
+
+                rm -rf $NGX_AUTOTEST*
+                adb shell rm /data/local/tmp/$(basename $NGX_AUTOTEST 2>&1)
+
+                ngx_found=yes
+
+                if test -n "$ngx_feature_name"; then
+                    have=$ngx_have_feature . auto/have
+                fi
+
+                # ignore work check
+                # echo " found but is not working"
             fi
         ;;
 
@@ -80,7 +95,23 @@ if [ -x $NGX_AUTOTEST ]; then
 
 END
             else
-                echo " found but is not working"
+                eval "adb push $NGX_AUTOTEST /data/local/tmp/ 2>&1" > /dev/null
+                adb shell chmod 755 /data/local/tmp/$(basename $NGX_AUTOTEST)
+
+                echo " found"
+                ngx_found=yes
+
+                cat << END >> $NGX_AUTO_CONFIG_H
+
+#ifndef $ngx_feature_name
+#define $ngx_feature_name  `adb shell /data/local/tmp/$(basename $NGX_AUTOTEST 2>&1)`
+#endif
+
+END
+                adb shell rm /data/local/tmp/$(basename $NGX_AUTOTEST 2>&1)
+
+                # ignore work check
+                # echo " found but is not working"
             fi
         ;;
 

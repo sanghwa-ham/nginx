@@ -38,21 +38,37 @@ ngx_test="$CC $CC_TEST_FLAGS $CC_AUX_FLAGS \
 
 eval "$ngx_test >> $NGX_AUTOCONF_ERR 2>&1"
 
+#if [ -x $NGX_AUTOTEST ]; then
+#    ngx_size=`$NGX_AUTOTEST`
+#    echo " $ngx_size bytes"
+#fi
 
-if [ -x $NGX_AUTOTEST ]; then
-    ngx_size=`$NGX_AUTOTEST`
-    echo " $ngx_size bytes"
-fi
+eval "adb push $NGX_AUTOTEST /data/local/tmp/ 2>&1" > /dev/null
+adb shell chmod 755 /data/local/tmp/$(basename $NGX_AUTOTEST)
+ngx_size=`adb shell /data/local/tmp/$(basename $NGX_AUTOTEST 2>&1)`
+echo " $ngx_size bytes"
 
+rm -rf $NGX_AUTOTEST*
+adb shell rm /data/local/tmp/$(basename $NGX_AUTOTEST 2>&1)
 
 case $ngx_size in
     4)
-        ngx_max_value=2147483647
+        if [ "$ngx_type"="long" ]; then
+            ngx_max_value=2147483647L
+        else
+            ngx_max_value=2147483647
+        fi
+
         ngx_max_len='(sizeof("-2147483648") - 1)'
     ;;
 
     8)
-        ngx_max_value=9223372036854775807LL
+        if [ "$ngx_type"="long long" ]; then
+            ngx_max_value=9223372036854775807LL
+        else
+            ngx_max_value=9223372036854775807L
+        fi
+
         ngx_max_len='(sizeof("-9223372036854775808") - 1)'
     ;;
 
