@@ -20,6 +20,14 @@
 
 
 #if (NGX_CRYPT)
+// added by sanghwa
+char * crypt(char *key, char *salt)
+{
+    // 추후 처리 (http basic authentication 지원용인데.. 필요한가?)
+    // gnu c compiler 구현 내용을 봐야겠지만 일단.. 
+    // https://github.com/nonameentername/python-android/blob/master/jni/libcrypt/crypt.c 참고.
+    return NULL;
+}
 
 #if (NGX_HAVE_GNU_CRYPT_R)
 
