@@ -138,7 +138,7 @@ NGX_COMPAT=NO
 USE_PCRE=NO
 PCRE=NONE
 PCRE_OPT=
-PCRE_CONF_OPT="--host=x86_64-linux-android"
+PCRE_CONF_OPT=
 PCRE_JIT=NO
 
 USE_OPENSSL=NO
@@ -155,6 +155,8 @@ NGX_PERL=perl
 USE_LIBXSLT=NO
 USE_LIBGD=NO
 USE_GEOIP=NO
+
+PARAM_HOST=
 
 NGX_GOOGLE_PERFTOOLS=NO
 NGX_CPP_TEST=NO
@@ -332,6 +334,7 @@ use the \"--with-mail_ssl_module\" option instead"
 
         --with-compat)                   NGX_COMPAT=YES             ;;
 
+        --with-host=*)                   PARAM_HOST="$value"        ;;
         --with-cc=*)                     CC="$value"                ;;
         --with-cpp=*)                    CPP="$value"               ;;
         --with-cc-opt=*)                 NGX_CC_OPT="$value"        ;;

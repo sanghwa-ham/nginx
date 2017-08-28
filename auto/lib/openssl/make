@@ -51,7 +51,7 @@ END
 $OPENSSL/.openssl/include/openssl/ssl.h:	$NGX_MAKEFILE
 	cd $OPENSSL \\
 	&& if [ -f Makefile ]; then \$(MAKE) clean; fi \\
-	&& ./config --prefix=$ngx_prefix no-shared $OPENSSL_OPT \\
+	&& ./Configure --prefix=$ngx_prefix $OPENSSL_OPT --cross-compile-prefix=$PARAM_HOST- \\
 	&& \$(MAKE) \\
 	&& \$(MAKE) install_sw LIBDIR=lib
 
